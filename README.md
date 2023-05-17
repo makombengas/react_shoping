@@ -10,7 +10,7 @@
    2. Create github account
    3. Connect vscode to github
    4. Publish repository
-5. List products
+5. List products first typeScript code
    1. create products type
    2. create products array
    3. add products image
