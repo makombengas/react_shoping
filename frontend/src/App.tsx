@@ -1,27 +1,34 @@
-import './App.css';
-import { sampleProducts } from './data';
+// import './App.css';
+import { Navbar, Nav, Container } from 'react-bootstrap';
+
+import Home from './pages/home/Home';
 
 function App() {
   return (
-    <div>
-      <header>TS Amazona</header>
+    <div className="d-flex flex-column vh-100">
+      <header>
+        <Navbar bg="dark" fixed="top" variant="dark" expand="lg">
+          <Container>
+            <Navbar.Brand>Dorette Shop</Navbar.Brand>
+            <Navbar.Collapse className="justify-content-end">
+              <Nav>
+                <Nav.Link href="#home">Home</Nav.Link>
+                <Nav.Link href="#Cart">Cart</Nav.Link>
+                <Nav.Link href="#signin">Sign in</Nav.Link>
+              </Nav>
+            </Navbar.Collapse>
+          </Container>
+        </Navbar>
+      </header>
       <main>
-        <ul>
-          {sampleProducts.map((product) => (
-            <li key={product.slug} className="products">
-              <img
-                className="product-image"
-                src={product.image}
-                alt={product.name}
-              />
-              <h2>{product.name}</h2>
-              <p>{product.price} €</p>
-            </li>
-          ))}
-        </ul>
+        <Container className="mt-3">
+          <Home />
+        </Container>
       </main>
 
-      <footer>all rights reserved</footer>
+      <footer className="text-center">
+        <div>all rights reserved</div>
+      </footer>
     </div>
   );
 }
