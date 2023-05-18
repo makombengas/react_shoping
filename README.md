@@ -182,3 +182,44 @@ const {featuredProducts, latestProducts} = products
 
 6 refine return statement
 replace sampleProducts with products
+
+# video-10-create-rating-productItem-component
+
+1.  Rating.js
+
+    ```js
+    function Rating(props:{
+       rating: Number
+       numReviews?:Number
+       captions?:String
+    }){
+       const {rating, numReviews, captions} = props
+       return (
+          <div className="rating" >
+             <span>
+                <i className={
+                   rating >=1
+                   ? 'fas fa-star'
+                   : rating >=0.5
+                   ? 'fas fa-star-half-alt'
+                   : 'far fa-star'
+                } >
+
+             </span>
+
+          </div>
+       )
+    }
+    ```
+
+# set page title
+
+1. npm i react-helmet-async
+2. main.tsx
+   ```js
+   import {HelmetProvider} from 'react-helmet-provider'
+   ...
+   <HelmetProvider>
+      <RouterProvider router={router}>
+   </HelmetProvider>
+   ```

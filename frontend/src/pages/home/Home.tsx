@@ -1,6 +1,6 @@
 import { Col, Container, Row } from 'react-bootstrap';
 // import { sampleProducts } from '../../data';
-import { Link } from 'react-router-dom';
+
 import { Product } from '../../types/Product';
 import { useReducer, useEffect } from 'react';
 import axios from 'axios';
@@ -8,6 +8,8 @@ import { getError } from '../../utils';
 import { ApiError } from '../../types/ApiError';
 import LoadingBox from '../../components/loading/LoadingBox';
 import MessageBox from '../../components/messageBox/MessageBox';
+import ProductItem from '../../components/productItem/ProductItem';
+import { Helmet } from 'react-helmet-async';
 
 type State = {
   products: Product[];
@@ -71,17 +73,12 @@ const Home = () => {
     <div>
       <Container className="mt-5">
         <Row>
+          <Helmet>
+            <title>Dorette Shop</title>
+          </Helmet>
           {products.map((product) => (
             <Col sm={6} md={4} lg={3} key={product.slug} className="products">
-              <Link className="link" to={'/product/' + product.slug}>
-                <img
-                  className="product-image"
-                  src={product.image}
-                  alt={product.name}
-                />
-                <h2>{product.name}</h2>
-                <p>{product.price} €</p>
-              </Link>
+              <ProductItem product={product} />
             </Col>
           ))}
         </Row>
