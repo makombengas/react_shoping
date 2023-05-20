@@ -183,7 +183,7 @@ const {featuredProducts, latestProducts} = products
 6 refine return statement
 replace sampleProducts with products
 
-# video-10-create-rating-productItem-component
+# create-rating-productItem-component
 
 1.  Rating.js
 
@@ -222,4 +222,190 @@ replace sampleProducts with products
    <HelmetProvider>
       <RouterProvider router={router}>
    </HelmetProvider>
+   ```
+
+# Load-Products by React-query
+
+1. npm i @tanstack/react-query @tanstack/react-query-devtools
+2. main.tsx
+
+   ```js
+   //remove lines
+   import axios from 'axios'
+   axios.defaults.baseUrl =
+   process.env.NODE_ENV === 'development' ? 'https://localhost:4000': '/'
+
+   ...
+      <HelmetProvider>
+         <QueryClientProvider client={queryClient}>
+         <BrowserRouter>
+            <App />
+         </BrowserRouter>
+         <ReactQueryDevtools initialIsOpen={false} />
+         </QueryClientProvider>
+      </HelmetProvider>
+   ```
+
+3. apiClient.ts to src frontend apiClient
+
+   ```js
+   import axios from 'axios';
+   const apiClient = axios.create({
+     baseURL:
+       process.env.NODE_ENV === 'development' ? 'https://localhost:5001' : '/',
+     headers: { Content: 'application/json' },
+   });
+
+   export default apiClient;
+   ```
+
+4. hooks/productHook.ts to src frontend hook
+
+   ```js
+   export const useGetProductsQuery = ()=>{
+      useQuery({
+         queryKey: ['products'],
+         queryFn: async ()=>
+         (
+            await apiClient.get<Product[]>(`api/products`)
+         ).data,
+
+      })
+   }
+   ```
+
+# create product page
+
+1. index.ts backend
+
+   ```js
+   app.get('/api/products/:slug', (req: Request, res: Response) => {
+     res.json(sampleProducts.find((x) => x.slug === req.params.slug));
+   });
+   ```
+
+2. productHooks.ts
+   ```js
+   export const useGetProductDetailsSlugQuery = (slug: string) => {
+     useQuery({
+       queryKey: ['products', slug],
+       queryFn: async () =>
+         ((await apiClient.get) < Product > `api/products/slug/${slug}`).data,
+     });
+   };
+   ```
+
+# create react context
+
+1. Store.ts
+
+   ```js
+         type AppState = {
+      model: string;
+      };
+      const initialState: AppState = {
+      mode: localStorage.getItem('mode')
+         ? localStorage.getItem('mode')!
+         : window.matchMedia &&
+            window.matchMedia('(prefers-color-scheme: dark)').matches
+         ? 'dark'
+         : 'light',
+      };
+
+      type Action = { type: 'SWITCH_MODE' };
+
+      function reducer(state: AppState, action: Action): AppState {
+      switch (action.type) {
+         case 'SWITCH_MODE':
+            return { mode: state.mode === 'dark' ? 'light' : 'dark' };
+
+         default:
+            state;
+      }
+      }
+
+      const defaultDispatch: React.Dispatch<Action> = () => initialState;
+
+      const Store = React.createContext({
+      state: initialState,
+      dispatch: defaultDispatch,
+      });
+
+      function StoreProvider(props: React.PropsWithChildren<{}>) {
+      const [state, dispatch] = React.useReducer<React.Reducer<AppState, Action>>(
+         reducer,
+         initialState
+      );
+
+      return <Store.Provider value={{ state, dispatch }} {...props} />;
+      }
+
+      export { Store, StoreProvider };
+   ```
+
+2. main.ts
+
+   ```js
+   <StoreProvider>
+     <HelmetProvider>
+       <QueryClientProvider client={queryClient}>
+         <BrowserRouter>
+           <App />
+         </BrowserRouter>
+         <ReactQueryDevtools initialIsOpen={false} />
+       </QueryClientProvider>
+     </HelmetProvider>
+   </StoreProvider>
+   ```
+
+# Connect MongoDB
+
+1. create mongodb database
+2. npm install dotenv mongoose @typescript/typegoose
+3. put mongodb uri in .env
+4. MONGODB_URI=.........
+5. index.ts
+
+   ```js
+   dotenv.config();
+   const MONGODB_URI = process.env.MONGODB_URL || 'mongobd:.....';
+   mongoose.set('strictQuery', true);
+   mongoose
+     .connect(MONGODB_URI)
+     .then(() => {
+       console.log('Connecting to MongoDB');
+     })
+     .catch(() => {
+       console.log('error mongodb');
+     });
+   ```
+
+6. product model
+
+   ```js
+   import {modelOptions, prop, getModelForClass} from '@typegoose/typegoose';
+   @modelOptions({})
+   @modelOptions({schemaOptions: {timestamps: true})
+   export class Product{
+      public _id!: string
+      @prop({required: true}),
+
+      public name!: string
+      @prop({required: true, unique: true})
+
+       public slug!: string
+      @prop({required: true})
+
+   }
+   ```
+
+7. npm i express-async-handler
+8. product router.ts
+
+   ```js
+   export const productRouter = express.Router();
+   productRouter.get(async (req, res) => {
+     const product = await productModel.find();
+     res.json(product);
+   });
    ```

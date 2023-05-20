@@ -1,6 +1,22 @@
-import express, { Request, Response } from 'express';
+import express from 'express';
 import cors from 'cors';
-import { sampleProducts } from './data';
+// import { sampleProducts } from './data';
+import mongoose from 'mongoose';
+import dotenv from 'dotenv';
+import { productRouter } from './routers/productRouter';
+import { seedRouter } from './routers/seedRouter/seedRouter';
+dotenv.config();
+const MONGODB_URI =
+  process.env.MONGODB_URI || 'mongodb://localhost/doretteShopDb';
+mongoose.set('strictQuery', true);
+mongoose
+  .connect(MONGODB_URI)
+  .then(() => {
+    console.log('Connecting to MongoDB');
+  })
+  .catch(() => {
+    console.log('error mongodb');
+  });
 const app = express();
 app.use(
   cors({
@@ -8,9 +24,11 @@ app.use(
     origin: ['http://localhost:5173'],
   })
 );
-app.get('/api/products', (req: Request, res: Response) => {
-  res.json(sampleProducts);
-});
+
+// get products
+app.use('/api/products', productRouter);
+app.use('/api/seed', seedRouter);
+
 const PORT = 4000;
 app.listen(PORT, () => {
   console.log(`server listed at http://localhost:${PORT}`);

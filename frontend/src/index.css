@@ -22,9 +22,20 @@ img.large {
 img.thumbnail {
   height: 80px;
 }
-.link {
-  text-decoration: none;
+a.header-link:hover,
+.header-link > a:hover {
+  color: white;
+  border: 1px white solid;
+}
+
+a.header-link:hover,
+.header-link > a:hover {
+  color: white;
+  border: 1px white solid;
+}
+.linkProductItem {
   color: black !important;
+  text-decoration: none;
 }
 .spinner {
   margin: 0;
@@ -37,11 +48,66 @@ img.thumbnail {
 .rating span {
   color: #ffc000;
 }
-button {
+.btn-primary,
+.btn-outline-primary {
   background-color: black !important;
-  border: none !important;
+  color: white;
+  border: none;
 }
-.light {
+
+.outStockButton {
   background-color: red !important;
-  border: none !important;
+  border: none;
+}
+
+.productPage {
+  overflow: hidden;
+}
+.productRow {
+  padding: 1rem;
+}
+img.large {
+  max-width: 100%;
+}
+.cardBody {
+  background-color: white !important;
+}
+
+.homeNavLink {
+  border-bottom: none;
+}
+img.thumbnail {
+  height: 5rem;
+}
+.cartPage {
+  padding: 2rem;
+}
+.cartSubTotal {
+  color: black;
+}
+h1 {
+  padding-bottom: 1rem;
+}
+a {
+  text-decoration: none;
+  color: black;
+}
+a:hover {
+  text-decoration: none;
+  color: black;
+}
+.fas .fa-trash {
+  color: red;
+}
+
+.alert-info {
+  --bs-alert-color: black;
+  --bs-alert-bg: #fccfcf;
+  --bs-alert-border-color: lightgreys;
+  font-size: 1.2rem;
+  display: flex;
+  gap: 2rem;
+  flex-wrap: wrap;
+  align-items: center;
+  border: 1px solid lightgrey;
 }

@@ -4,13 +4,14 @@
   text-decoration: none;
 }
 .inactive {
-  color: white;
+  color: white !important;
   text-decoration: none;
 }
 .nav {
   display: flex;
   gap: 1rem;
   font-size: 1.2rem;
+  color: black;
 }
 .inactive:hover {
   color: white;
